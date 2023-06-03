@@ -26,9 +26,11 @@ router.post('/login_process', function (request, response) {
 
     if (username && password) {             // id와 pw가 입력되었는지 확인
         
-        db.query('CALL LOGIN(?,?)', [username, password], function(error, results, fields) {
+        db.query('CALL LOGIN(?,?)', [username, password], function(error, row, fields) {
+            result = JSON.parse(JSON.parse(JSON.stringify(row[0]))[0].LOGIN).userCode;
+            console.log(result);
             if (error) throw error;
-            if (results) {       // db에서의 반환값이 있으면 로그인 성공
+            if (result == "1") {       // db에서의 반환값이 있으면 로그인 성공
                 request.session.is_logined = true;      // 세션 정보 갱신
                 request.session.nickname = username;
                 request.session.save(function () {
