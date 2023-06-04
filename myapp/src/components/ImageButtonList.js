@@ -2,12 +2,15 @@ import React from 'react';
 
 const ImageButtonList = ({ images, onClick }) => {
   return (
-    <div>
+    <div className="image-button-list">
       {images.map((image, index) => (
-        <img
+        <img className='image-button'
           key={index}
-          src={image.src}
-          alt={image.alt}
+          id={image.medID}
+          category = {image.category}
+          url = {image.URL}
+          src='myapp/src/logo.svg'
+          alt={image.title}
           onClick={() => onClick(image)}
         />
       ))}
