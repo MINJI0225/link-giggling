@@ -1,6 +1,9 @@
 import './App.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { Fragment } from 'react';
+import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
+import VideoPlayer from './components/VideoPlayer';
 
 function Login(props) {
   const [id, setId] = useState("");
@@ -32,7 +35,7 @@ function Login(props) {
           .then((res) => res.json())
           .then((json) => {            
             if(json.isLogin==="True"){
-              props.setMode("WELCOME");
+              props.setMode("MAIN");
             }
             else {
               alert(json.isLogin)
@@ -104,15 +107,75 @@ function Signin(props) {
   </> 
 }
 
+function Search(props) {
+  const medData = {
+    title: props.title
+  };
+
+  var lst = null;
+
+  useEffect(() => {
+    fetch("http://localhost:3000/search", { //search 주소에서 받을 예정
+    method: "post", // method :통신방법
+    headers: {      // headers: API 응답에 대한 정보를 담음
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(medData), //userData라는 객체를 보냄
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      if(json.isSuccess==="True"){
+        
+      }
+      else{
+        alert(json.isSuccess)
+      }
+    });
+  }); 
+
+  return <>
+    <div clasName="form">
+      <ul>
+        <p>{props.list}</p>
+      </ul>
+    </div>
+    <p>로그인화면으로 돌아가기  <button onClick={() => {
+      props.setMode("MAIN");
+    }}>로그인</button></p>
+  </> 
+}
+
+function Video(props) {
+  return <>
+    <h2>Video Name</h2>
+    <Fragment>
+      <Router>
+        <div>
+          <Link to='/video' className='link'>Video</Link>
+        </div>
+        <Routes>
+          <Route exact path='/video' element={<VideoPlayer src={props.media} />} />
+        </Routes>
+      </Router>
+    </Fragment>
+    <p>메인화면으로 돌아가기  <button onClick={() => {
+      props.setMode("MAIN");
+    }}>HOME</button></p>
+  </>
+}
+
 function App() {
   const [mode, setMode] = useState("");
+  const [title, setTitle] = useState("");
+  const [media, setMedia] = useState("");
+  const [medList, setList] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:3000/authcheck")
       .then((res) => res.json())
       .then((json) => {        
         if (json.isLogin === "True") {
-          setMode("WELCOME");
+          setMode("MAIN");
         }
         else {
           setMode("LOGIN");
@@ -123,26 +186,56 @@ function App() {
   let content = null;  
 
   if(mode==="LOGIN"){
-    content = <Login setMode={setMode}></Login> 
+    content = <>
+      <div className="background">
+        <Login setMode={setMode}></Login> 
+      </div>
+    </>
   }
   else if (mode === 'SIGNIN') {
     content = <Signin setMode={setMode}></Signin> 
   }
-  else if (mode === 'WELCOME') {
+  else if (mode === 'MAIN') {
     content = <>
-    <h2>메인 페이지에 오신 것을 환영합니다</h2>
-    <p>로그인에 성공하셨습니다.</p> 
-    <a href="/logout">로그아웃</a>   
+      <div>
+      <h2>LinkGiggling</h2>
+      <p><input className="search" type="text" placeholder="제목을 입력하세요" onChange={event => {
+            setTitle(event.target.value);
+          }} /></p>
+      <p><input className="btn" type="submit" value="검색" onClick={() => {
+        setMode('SEARCH');
+      }} /></p>
+      <p><input className="btn" type="submit" value="비디오" onClick={() => {
+        setMedia("https://cdn.jwplayer.com/manifests/pZxWPRg4.m3u8");
+        setMode('VIDEO');
+      }} /></p>
+      <a href="/logout">로그아웃</a> 
+      </div>  
+    </>
+  } else if (mode === 'SEARCH') {
+    content = <>
+      <div>
+      <h2>LinkGiggling</h2>
+      <Search title={title} setMode={setMode} setList={setList}></Search>
+      <a href="/logout">로그아웃</a> 
+      </div>  
+    </>
+  } else if (mode === 'VIDEO') {
+    content = <>
+      <div>
+      <h2>LinkGiggling</h2>
+      <Video media={media} setMode={setMode}></Video>
+      <a href="/logout">로그아웃</a> 
+      </div>  
     </>
   }
 
   return (
     <>
-      <div className="background">
-        {content}
-      </div>
+      {content}
     </>
   );
+
 }
 
 export default App;
