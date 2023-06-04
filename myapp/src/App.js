@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Fragment } from 'react';
 import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import VideoPlayer from './components/VideoPlayer';
-import ImageButtonList from './components/ImageButtonList';
+import ImageButtonList from './ImageButtonList';
 import ButtonList from './components/ButtonList';
 
 function Login(props) {
@@ -37,6 +37,7 @@ function Login(props) {
           .then((res) => res.json())
           .then((json) => {            
             if(json.isLogin==="True"){
+              props.setUser(json.userCode);
               props.setMode("MAIN");
             }
             else {
@@ -125,7 +126,6 @@ function Search(props) {
     .then((res) => res.json())
     .then((json) => {
       if(json.isSuccess==="True"){
-        alert(json.med);
         props.setList(json.med);
       }
       else{
@@ -155,7 +155,6 @@ function Category(props) {
     .then((res) => res.json())
     .then((json) => {
       if(json.isSuccess==="True"){
-        alert(json.med);
         props.setsecList(json.med);
       }
       else{
@@ -170,25 +169,40 @@ function Category(props) {
 }
 
 function Video(props) {
+  const [res, setRes] = useState("720");
+  const [click, setClick] = useState(false);
+  const buttons = [
+    { label: '360' },
+    { label: '480' },
+    { label: '600'},
+    { label: '720' },
+    { label: '840' },
+  ];
   return <>
     <Fragment>
       <Router>
-        <div>
-          <Link to='/video' className='link'>Show Video</Link>
+        <div className='videorow'>
+          <button onClick={() => {setClick(true)}} className='link'>
+            <Link to='/video' className='link'>Show Video</Link>
+          </button>
+          <ButtonList buttons={buttons} onClick={(button, index) => {
+              setRes(button.label);
+            }} />
+          <p>메인화면으로 돌아가기  <button onClick={() => {
+            props.setMode("MAIN");
+          }}>HOME</button></p>
         </div>
         <Routes>
-          <Route exact path='/video' element={<VideoPlayer src={props.media} />} />
+          <Route exact path='/video' element={<VideoPlayer src={props.media} res={res}/>} />
         </Routes>
       </Router>
     </Fragment>
-    <p>메인화면으로 돌아가기  <button onClick={() => {
-      props.setMode("MAIN");
-    }}>HOME</button></p>
   </>
 }
 
 function App() {
   const [mode, setMode] = useState("");
+  const [user, setUser] = useState("")
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [media, setMedia] = useState("");
@@ -225,7 +239,7 @@ function App() {
   if(mode==="LOGIN"){
     content = <>
       <div className="background">
-        <Login setMode={setMode}></Login> 
+        <Login setMode={setMode} setUser={setUser}></Login> 
       </div>
     </>
   }
@@ -288,7 +302,6 @@ function App() {
       <div>
       <h2>LinkGiggling</h2>
       <Video media={media} setMode={setMode}></Video>
-      <a href="/logout">로그아웃</a> 
       </div>  
     </>
   }

@@ -9,7 +9,7 @@ const ImageButtonList = ({ images, onClick }) => {
           id={image.medID}
           category = {image.category}
           url = {image.URL}
-          src='myapp/src/logo.svg'
+          src='images/1.jpg'
           alt={image.title}
           onClick={() => onClick(image)}
         />
