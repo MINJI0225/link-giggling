@@ -124,6 +124,32 @@ app.post('/signin', function(req, res) {
   }
 });
 
+app.post('/search', function(req, res) {
+  const medTitle = req.body.title;
+  console.log(medTitle);
+
+  const sendData = {isSuccess: "", med: []};
+
+  if (medTitle) {
+    db.query('CALL SEAR_TITLE(?)', [medTitle], function(error, row) {
+      const result = JSON.parse(JSON.parse(JSON.stringify(row[0]))[0].SEAR_TITLE);
+      console.log(result.length);
+      if (error) throw error;
+      if (result.length > 0) {
+        sendData.isSuccess = "True"
+        for (var i=0; i < result.length; i++) {
+          sendData.med.push(result[i].medID);
+        }
+        res.send(sendData)
+      }
+    });
+  } else {
+    sendData.isSuccess = "검색어를 입력하세요!"
+    res.send(sendData);
+  }
+
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
