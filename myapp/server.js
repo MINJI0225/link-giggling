@@ -137,17 +137,37 @@ app.post('/search', function(req, res) {
       if (error) throw error;
       if (result.length > 0) {
         sendData.isSuccess = "True"
-        for (var i=0; i < result.length; i++) {
-          sendData.med.push(result[i].medID);
-        }
+        sendData.med = result
         res.send(sendData)
       }
     });
   } else {
-    sendData.isSuccess = "검색어를 입력하세요!"
+    sendData.isSuccess = "검색어를 다시 입력하세요!"
     res.send(sendData);
   }
+});
 
+app.post('/category', function(req, res) {
+  const medCat = req.body.category;
+  console.log(medCat);
+
+  const sendData = {isSuccess: "", med: []};
+
+  if (medCat) {
+    db.query('CALL SEAR_CATEGORY(?)', [medCat], function(error, row) {
+      const result = JSON.parse(JSON.parse(JSON.stringify(row[0]))[0].SEAR_CATEGORY);
+      console.log(result.length);
+      if (error) throw error;
+      if (result.length > 0) {
+        sendData.isSuccess = "True"
+        sendData.med = result
+        res.send(sendData)
+      }
+    });
+  } else {
+    sendData.isSuccess = "다른 카테고리를 선택해주세요!"
+    res.send(sendData);
+  }
 });
 
 app.listen(port, () => {

@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { Fragment } from 'react';
 import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import VideoPlayer from './components/VideoPlayer';
+import ImageButtonList from './components/ImageButtonList';
+import ButtonList from './components/ButtonList';
 
 function Login(props) {
   const [id, setId] = useState("");
@@ -112,8 +114,6 @@ function Search(props) {
     title: props.title
   };
 
-  var lst = null;
-
   useEffect(() => {
     fetch("http://localhost:3000/search", { //search 주소에서 받을 예정
     method: "post", // method :통신방법
@@ -125,7 +125,8 @@ function Search(props) {
     .then((res) => res.json())
     .then((json) => {
       if(json.isSuccess==="True"){
-        
+        alert(json.med);
+        props.setList(json.med);
       }
       else{
         alert(json.isSuccess)
@@ -133,25 +134,47 @@ function Search(props) {
     });
   }); 
 
-  return <>
-    <div clasName="form">
-      <ul>
-        <p>{props.list}</p>
-      </ul>
-    </div>
-    <p>로그인화면으로 돌아가기  <button onClick={() => {
-      props.setMode("MAIN");
-    }}>로그인</button></p>
-  </> 
+  props.setMode("MAIN");
+
+  return;
+}
+
+function Category(props) {
+  const medData = {
+    category: props.category
+  };
+
+  useEffect(() => {
+    fetch("http://localhost:3000/category", { //search 주소에서 받을 예정
+    method: "post", // method :통신방법
+    headers: {      // headers: API 응답에 대한 정보를 담음
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(medData), //userData라는 객체를 보냄
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      if(json.isSuccess==="True"){
+        alert(json.med);
+        props.setsecList(json.med);
+      }
+      else{
+        alert(json.isSuccess)
+      }
+    });
+  }); 
+
+  props.setMode("MAIN");
+
+  return;
 }
 
 function Video(props) {
   return <>
-    <h2>Video Name</h2>
     <Fragment>
       <Router>
         <div>
-          <Link to='/video' className='link'>Video</Link>
+          <Link to='/video' className='link'>Show Video</Link>
         </div>
         <Routes>
           <Route exact path='/video' element={<VideoPlayer src={props.media} />} />
@@ -167,8 +190,22 @@ function Video(props) {
 function App() {
   const [mode, setMode] = useState("");
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
   const [media, setMedia] = useState("");
-  const [medList, setList] = useState("");
+  const [images, setList] = useState([]);
+  const [secimages, setsecList] = useState([]);
+
+  const buttons = [
+    { label: '애니메이션' },
+    { label: '드라마' },
+    { label: '로맨스' },
+    { label: '코미디' },
+    { label: '재난' },
+    { label: '스릴러' },
+    { label: '액션' },
+    { label: '스포츠' },
+    { label: '광고' },
+  ];
 
   useEffect(() => {
     fetch("http://localhost:3000/authcheck")
@@ -193,22 +230,40 @@ function App() {
     </>
   }
   else if (mode === 'SIGNIN') {
-    content = <Signin setMode={setMode}></Signin> 
+    content = <>
+    <div className="background">
+      <Signin setMode={setMode}></Signin> 
+    </div>
+  </>
   }
   else if (mode === 'MAIN') {
     content = <>
       <div>
       <h2>LinkGiggling</h2>
-      <p><input className="search" type="text" placeholder="제목을 입력하세요" onChange={event => {
-            setTitle(event.target.value);
+      <div className="search">
+        <div className="searchRow">
+          <p><input className="searchText" type="text" placeholder="제목을 입력하세요" onChange={event => {
+              setTitle(event.target.value);
           }} /></p>
-      <p><input className="btn" type="submit" value="검색" onClick={() => {
-        setMode('SEARCH');
-      }} /></p>
-      <p><input className="btn" type="submit" value="비디오" onClick={() => {
-        setMedia("https://cdn.jwplayer.com/manifests/pZxWPRg4.m3u8");
-        setMode('VIDEO');
-      }} /></p>
+          <p><input className="searchBtn" type="submit" value="검색" onClick={() => {
+            setMode('SEARCH');
+          }} /></p>
+        </div>
+        <ImageButtonList images={images} onClick={(image) => {
+          const url = JSON.parse(JSON.stringify(image, ['URL'])).URL;
+          setMedia(url);
+          setMode('VIDEO');
+        }} />
+        <ButtonList buttons={buttons} onClick={(button, index) => {
+          setCategory(index);
+          setMode("CATEGORY");
+        }} />
+        <ImageButtonList images={secimages} onClick={(image) => {
+          const url = JSON.parse(JSON.stringify(image, ['URL'])).URL;
+          setMedia(url);
+          setMode('VIDEO');
+        }} />
+      </div>
       <a href="/logout">로그아웃</a> 
       </div>  
     </>
@@ -217,7 +272,15 @@ function App() {
       <div>
       <h2>LinkGiggling</h2>
       <Search title={title} setMode={setMode} setList={setList}></Search>
-      <a href="/logout">로그아웃</a> 
+      <a className="done" href="/logout">로그아웃</a> 
+      </div>  
+    </>
+  } else if (mode === 'CATEGORY') {
+    content = <>
+      <div>
+      <h2>LinkGiggling</h2>
+      <Category category={category} setMode={setMode} setsecList={setsecList}></Category>
+      <a className="done" href="/logout">로그아웃</a> 
       </div>  
     </>
   } else if (mode === 'VIDEO') {
