@@ -182,3 +182,43 @@ li {
 .image-button span {
   margin-top: 5px;
 }
+
+.videoRow {
+  background-color: none;
+  height: auto;
+  width: 90%;
+  max-width: 1024px;
+  padding: 10px;
+  align-items: left;
+}
+
+.videorow {
+  background-color: none;
+  height: auto;
+  width: 90%;
+  max-width: 1024px;
+  padding: 10px;
+}
+
+.link {
+  margin-right: 30px
+}
+
+.videobutton {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #6A679E;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.videobutton:hover {
+  background-color: #6A679E;
+}
+
+.videobutton:focus {
+  outline: none;
+}

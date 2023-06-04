@@ -45,7 +45,7 @@ app.post('/login', (req, res) => {
 
   console.log(password);
 
-  const sendData = {isLogin: "" };
+  const sendData = {isLogin: "" , userCode: ""};
 
   if (username && password) {             // id와 pw가 입력되었는지 확인
       db.query('CALL LOGIN(?,?)', [username, password], function(error, row, fields) {
@@ -58,6 +58,7 @@ app.post('/login', (req, res) => {
               console.log('success');  
               req.session.save(function () {
                   sendData.isLogin = "True"
+                  sendData.userCode = result
                   res.send(sendData);
               });
           }

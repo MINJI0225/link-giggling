@@ -17,6 +17,7 @@ class VideoPlayer extends React.Component {
 
       // triggered when the loaded manifest is parsed.s
       hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+        this.props.setLen(data.levels.length);
         console.log(
           '>>>>>>>>>>>> manifest loaded, found ' + data.levels.length + ' quality level');
         video.play();
@@ -34,6 +35,8 @@ class VideoPlayer extends React.Component {
         console.log('>>>>>>>>>>>> currentLevel:', hls.currentLevel);
         console.log('>>>>>>>>>>>> levels:', hls.levels);
         console.log('>>>>>>>>>>>> loadLevel:', hls.loadLevel);
+
+        this.props.setBuf(hls.currentLevel);
         
         if (level) {
           if (level.height) {
@@ -63,12 +66,12 @@ class VideoPlayer extends React.Component {
 
     return (
       <>
-        <div>
-          <button className='btn' onClick={this.handleZeroClick}>Level 0</button>
-          <button className='btn' onClick={this.handleAutoClick}>Auto</button>
+        <div className='videoRow'>
+          <button className='videobtn' onClick={this.handleZeroClick}>Level 0</button>
+          <button className='videobtn' onClick={this.handleAutoClick}>Auto</button>
         </div>
        
-        <video ref={this.videoRef} controls height={720} />
+        <video ref={this.videoRef} controls height={this.props.res} />
       </>
     );
   }
