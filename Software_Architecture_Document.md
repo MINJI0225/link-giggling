@@ -14,16 +14,18 @@
 * Node.js: 확장성 있는 네트워크 애플리케이션 개발에 사용되는 소프트웨어 플랫폼이다.
 * MySQL: 데이터 베이스를 구축하기 위한 오픈 소스 관계형 데이터베이스 관리 시스템(RDBMS)이다.
 
-## 2. Architectural Drivers
+## 2. Architecture Overview
+### 시스템 컨텍스트 (System Context)
+LinkGiggling 프로젝트는 이용자에게 시각적인 서비스와 상호작용을 제공하는 프론트엔드(Frontend)와 영상 정보 처리 및 송출과 프론트엔드와 데이터베이스 사이에서 데이터 및 요청를 전달하는 벡엔드(Backend), 데이터 저장 및 전송을 담당하는  데이터베이스(Database)로 구분하여 구현한다.
+
+
+## 3. 요구사항(Requirements)
 <!-- * 주어진 과제의 성공을 위해 개발하는 시스템이 만족해야하는 기능과 비기능 요구사항 작성 -->
-### 기능 요구사항 (Functional Requirements)
+### 3.1. 기능 요구사항 (Functional Requirements)
 <!-- * 시스템이 제공해야 하는 모든 기능을 명확하게 기술하며, 명세 내용은 모두가 이해하기 쉽고 간결하게 작성한다.
 * 외부모듈로부터의 특정 입력에 대한 요구사항
 * 특정 상황에서 제품이 제공해야하는 동작 기능에 대한 요구사항 -->
-<!-- ### 2.1 Backend Server
-#### 2.1.1 내용추가<br><br>
-### 2.2 Frontend Server
-#### 2.2.1 내용추가<br><br> -->
+
 ### 3.1.1 로그인 이전
 1. `FR01`: 이용자 추가하기
    -   `FR01-1`: 사용자가 회원가입 요청이 있을 때, 사용자 정보를 입력 받은 후 데이터베이스에 추가한다.
@@ -38,10 +40,6 @@
 
 2. `FR04`: 로그아웃
    -  `FR04-1`: 사용자에게 로그아웃 요청이 있을 경우, 로그인 이전 상태로 돌아간다.
-
-## 3. Architecture Overview
-### 시스템 컨텍스트 (System Context)
-LinkGiggling 프로젝트는 이용자에게 시각적인 서비스와 상호작용을 제공하는 프론트엔드(Frontend)와 영상 정보 처리 및 송출과 프론트엔드와 데이터베이스 사이에서 데이터 및 요청를 전달하는 벡엔드(Backend), 데이터 저장 및 전송을 담당하는  데이터베이스(Database)로 구분하여 구현한다.
 
 ## 4. Data Design
 본 절에서는 Database Schema에 대해 기술한다.
@@ -73,6 +71,7 @@ LinkGiggling 프로젝트는 이용자에게 시각적인 서비스와 상호작
 | medID | INT | not null | 빠른 검색, PRIMARY KEY, UNSIGNED |
 | title | VARCHAR(255) | not null | media의 제목 |
 | category | INT | null | 장르 코드 UNSIGNED |
+| URL | TEXT | null | 장르 코드 UNSIGNED |
 
 
 ### 4.4 quality
