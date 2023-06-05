@@ -8,14 +8,14 @@
 #### Request
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
-<!-- 수정필요 -->
+| BA01-1 | /signin | http://localhost:3000 | POST   |
 
 #### Parameter
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| userID | INT | 이용자 ID | TRUE |
+| userID | VARCHAR(45) | 이용자 ID | TRUE |
 | password | VARBINARY(64) | 해시 함수 처리 된 이용자 비밀번호 | TRUE |
+| password2 | VARBINARY(64) | 해시 함수 처리 된 이용자 비밀번호 확인용 | TRUE |
 | mail | VARCHAR(50) | 이용자 메일 | FALSE |
 
 #### Response
@@ -24,146 +24,80 @@
 | success | BOOLEAN | 데이터베이스에 해당 요청 성공 여부 |
 
 
-### 1.2 이용자 계정, 프로필 및 시청 기록 제거하기
+### 1.2 로그인
 
 #### Request
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
-<!-- 수정필요 -->
+| BA01-2 | /login | http://localhost:3000 | POST    |
 
 #### Parameter
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| userCode | INT | 이용자 고유 번호 | TRUE |
-
-#### Response
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| success | BOOLEAN | 데이터베이스에 해당 요청 성공 여부 |
-
-
-### 1.3 userCode 요청하기
-
-#### Request
-| ID     | URL                        | HOST                        | METHOD |
-| ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
-<!-- 수정필요 -->
-
-#### Parameter
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| userID | INT | 이용자 ID | TRUE |
+| userID | VARCHAR(45) | 이용자 ID | TRUE |
 | password | VARBINARY(64) | 해시 함수 처리 된 이용자 비밀번호 | TRUE |
 
 #### Response
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| userCode | INT | 이용자 고유 번호 |
-
-
-### 1.4 이용자 프로필 요청하기
-
-#### Request
-| ID     | URL                        | HOST                        | METHOD |
-| ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
-<!-- 수정필요 -->
-
-#### Parameter
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| userCode | INT | 이용자 고유 번호 | TRUE |
-
-#### Response
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| nickname | VARCHAR(30) | 이용자 프로필 이름(닉네임) |
-| usrInfo | SET | 이용자 정보(성별) |
-| birthYear | INT | 이용자가 태어난 해 |
-| nation | CHAR(2) | 이용 국가 코드 (ex KR, JP, US) |
-
-
-## 2. 동영상 관리
-### 2.1 동영상 주소, 내용 정보, 파일 정보 추가하기
-
-#### Request
-| ID     | URL                        | HOST                        | METHOD |
-| ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
-<!-- 수정필요 -->
-
-#### Parameter
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| URL | TEXT | 동영상 주소 | TRUE |
-| title | VARCHAR(255) | 동영상 제목 | TRUE |
-| category | INT | 동영상 카테고리(장르) | TRUE |
-| resolution | SET | 동영상 해상도 | TRUE |
-| length | TIME | 동영상 길이 | TRUE |
-
-#### Response
-| Name | Type | Description |
-| ---- | ---- | ----------- |
 | success | BOOLEAN | 데이터베이스에 해당 요청 성공 여부 |
 
 
-### 2.2 동영상 주소 요청하기
+### 1.3 로그아웃
 
 #### Request
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
+| BA01-3 | /logout | http://localhost:3000 | GET    |
 <!-- 수정필요 -->
 
 #### Parameter
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| medID | INT | 동영상 고유 번호 | TRUE |
+
+#### Response
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+
+
+## 2. 동영상 관리
+### 2.1 동영상 검색하기
+
+#### Request
+| ID     | URL                        | HOST                        | METHOD |
+| ------ | -------------------------- | --------------------------- | ------ |
+| BA02-1 | /search | http://localhost:3000 | POST    |
+
+#### Parameter
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| title | VARCHAR(255) | 동영상 제목 | TRUE |
 
 #### Response
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | URL | TEXT | 동영상 주소 |
+| title | VARCHAR(255) | 동영상 제목 |
+| category | INT | 동영상 카테고리(장르) |
+| medID | INT | 동영상 고유번호 |
 
 
-### 2.2 동영상 파일 정보 요청하기
-
-#### Request
-| ID     | URL                        | HOST                        | METHOD |
-| ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
-<!-- 수정필요 -->
-
-#### Parameter
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| medID | INT | 동영상 고유 번호 | TRUE |
-
-#### Response
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| resolution | SET | 동영상 해상도 |
-| length | TIME | 동영상 길이 |
-
-
-## 3. 시청 동영상 관리
-### 3.1 동영상 시청 기록 요청하기
+### 2.2 카테고리 해당 동영상 요청
 
 #### Request
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-| BA01-1 | /session-info/session-list | http://tvmedia.lge.com:5000 | GET    |
-<!-- 수정필요 -->
+| BA02-2 | /category | http://localhost:3000 | POST    |
 
 #### Parameter
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| userID | INT | 이용자 고유 번호, 벡엔드에서 이용 | TRUE |
+| category | INT | 동영상 장르 고유번호 | TRUE |
 
 #### Response
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| medID | INT | 동영상 고유 번호 |
-| bufferingStart | TIME | 시청하다 멈춘 시간 |
+| URL | TEXT | 동영상 주소 |
+| title | VARCHAR(255) | 동영상 제목 |
+| category | INT | 동영상 카테고리(장르) |
+| medID | INT | 동영상 고유번호 |
