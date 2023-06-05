@@ -12,6 +12,7 @@ PS D:\Downloads\termproject\backend> npm --version
 # Install MySQL
 
 Restore the DB to local
+
 Put DB info to config file
 ```
 mysql -u [사용자 계정] -p [패스워드] [복원할 DB] < [백업된 DB].sql
